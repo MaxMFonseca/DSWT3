@@ -7,6 +7,7 @@ Integrantes:
 
 ## Roteiro
 O SGBD utilizado foi o MySql. O nome do banco de dados é 'SiteTeatroPromo'.
+O Banco de dados esta populado com apenas os itens que estão no aquivo SiteTeatroPromoMvcApplication.java. São muitos itens para listar aqui, então basta dar uma olhada nesse arquivo.
 
 ## Checklist T3
 - Tudo esta implementado 100%. Max (50%) Matheus (50%).
