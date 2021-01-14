@@ -22,4 +22,5 @@ public interface IPromoService {
 	
 	void excluir(Long id);
 	
+	public long ultimoID();
 }

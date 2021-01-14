@@ -28,6 +28,17 @@ public class PromoService implements IPromoService {
 	}
 
 	@Transactional(readOnly = true)
+	public long ultimoID() {
+		List<Promo> promos = buscarTodos();
+		long lastId = 0;
+		for (Promo promo : promos) {
+			if(promo.getId() > lastId)
+				lastId = promo.getId();
+		}
+		return lastId;
+	}
+
+	@Transactional(readOnly = true)
 	public Promo buscarPorId(Long id) {
 		return dao.findById(id.longValue());
 	}

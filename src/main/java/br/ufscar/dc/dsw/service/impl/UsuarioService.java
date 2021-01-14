@@ -34,4 +34,15 @@ public class UsuarioService implements IUsuarioService {
 	public List<Usuario> buscarTodos() {
 		return dao.findAll();
 	}
+
+	@Transactional(readOnly = true)
+	public long ultimoID() {
+		List<Usuario> usuario = buscarTodos();
+		long lastId = 0;
+		for (Usuario u : usuario) {
+			if(u.getId() > lastId)
+				lastId = u.getId();
+		}
+		return lastId;
+	}
 }

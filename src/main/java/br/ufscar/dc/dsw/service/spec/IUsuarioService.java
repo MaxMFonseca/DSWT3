@@ -13,4 +13,6 @@ public interface IUsuarioService {
 	void salvar(Usuario usuario);
 
 	void excluir(Long id);	
+	
+	public long ultimoID();
 }

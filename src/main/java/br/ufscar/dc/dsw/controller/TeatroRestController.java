@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.ufscar.dc.dsw.domain.Promo;
 import br.ufscar.dc.dsw.domain.Teatro;
+import br.ufscar.dc.dsw.service.spec.IPromoService;
 import br.ufscar.dc.dsw.service.spec.ITeatroService;
+import br.ufscar.dc.dsw.service.spec.IUsuarioService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +34,12 @@ public class TeatroRestController {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
+	@Autowired
+	private IUsuarioService usuarioService;
+
+	@Autowired
+	private IPromoService pService;
+
 	private boolean isJSONValid(String jsonInString) {
 		try {
 			return new ObjectMapper().readTree(jsonInString) != null;
@@ -40,11 +49,16 @@ public class TeatroRestController {
 	}
 
 	private void parse(Teatro teatro, JSONObject json) {
-		Object id = json.get("id");
-		if (id instanceof Integer) {
-			teatro.setId(((Integer) id).longValue());
-		} else {
-			teatro.setId(((Long) id));
+		if(teatro.getId() == null){
+			Object id = json.get("id");
+			if (id != null) {
+				if (id instanceof Integer) {
+					teatro.setId(((Integer) id).longValue());
+				} else {
+					teatro.setId(((Long) id));
+				}
+			}else
+			teatro.setId(usuarioService.ultimoID() + 1);
 		}
 
 		teatro.setCNPJ((String) json.get("cnpj"));
@@ -122,12 +136,16 @@ public class TeatroRestController {
 	}
 
 	@DeleteMapping(path = "/teatros/{id}")
-	public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
-
+	public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {	
 		Teatro teatro = service.buscarPorId(id);
 		if (teatro == null) {
 			return ResponseEntity.notFound().build();
 		} else {
+			List<Promo> promos = pService.buscarTodos(service.buscarPorId(id));
+			for (Promo promo : promos) {
+				pService.excluir(promo.getId());
+			}
+
 			service.excluir(id);
 			return ResponseEntity.noContent().build();
 		}

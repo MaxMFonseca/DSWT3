@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.ufscar.dc.dsw.domain.Promo;
 import br.ufscar.dc.dsw.domain.Site;
+import br.ufscar.dc.dsw.service.spec.IPromoService;
 import br.ufscar.dc.dsw.service.spec.ISiteService;
+import br.ufscar.dc.dsw.service.spec.IUsuarioService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +34,12 @@ public class SiteRestController {
 	@Autowired
 	private ISiteService service;
 
+	@Autowired
+	private IUsuarioService usuarioService;
+
+	@Autowired
+	private IPromoService pService;
+
 	private boolean isJSONValid(String jsonInString) {
 		try {
 			return new ObjectMapper().readTree(jsonInString) != null;
@@ -40,11 +49,16 @@ public class SiteRestController {
 	}
 
 	private void parse(Site site, JSONObject json) {
-		Object id = json.get("id");
-		if (id instanceof Integer) {
-			site.setId(((Integer) id).longValue());
-		} else {
-			site.setId(((Long) id));
+		if(site.getId() == null){
+			Object id = json.get("id");
+			if (id != null) {
+				if (id instanceof Integer) {
+					site.setId(((Integer) id).longValue());
+				} else {
+					site.setId(((Long) id));
+				}
+			}else
+			site.setId(usuarioService.ultimoID() + 1);
 		}
 
 		site.setUrl((String) json.get("url"));
@@ -119,6 +133,11 @@ public class SiteRestController {
 		if (site == null) {
 			return ResponseEntity.notFound().build();
 		} else {
+			List<Promo> promos = pService.buscarTodos(service.buscarPorId(id));
+			for (Promo promo : promos) {
+				pService.excluir(promo.getId());
+			}
+
 			service.excluir(id);
 			return ResponseEntity.noContent().build();
 		}

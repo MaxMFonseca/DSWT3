@@ -3,13 +3,11 @@ package br.ufscar.dc.dsw.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +37,6 @@ public class PromoRestController {
 
 	@Autowired
 	private ISiteService siteService;
-
-	@Autowired
-	private BCryptPasswordEncoder encoder;
     
 	private boolean isJSONValid(String jsonInString) {
 		try {
@@ -51,55 +46,18 @@ public class PromoRestController {
 		}
 	}
 
-    @SuppressWarnings("unchecked")
-	private void parse(Teatro teatro, JSONObject json) {
-		Map<String, Object> map = (Map<String, Object>) json.get("teatro");
-
-		Object id = map.get("id");
-		if (id instanceof Integer) {
-			teatro.setId(((Integer) id).longValue());
-		} else {
-			teatro.setId(((Long) id));
-		}
-
-		teatro.setCNPJ((String) map.get("cnpj"));
-		teatro.setNome((String) map.get("nome"));
-		teatro.setCidade((String) map.get("cidade"));
-
-		teatro.setUsername((String) map.get("username"));
-		teatro.setPassword(encoder.encode((String)map.get("password")));
-		teatro.setRole((String) map.get("role"));
-    }
-    
-    @SuppressWarnings("unchecked")
-	private void parse(Site site, JSONObject json) {
-		Map<String, Object> map = (Map<String, Object>) json.get("site");
-
-		Object id = map.get("id");
-		if (id instanceof Integer) {
-			site.setId(((Integer) id).longValue());
-		} else {
-			site.setId(((Long) id));
-		}
-
-		site.setUrl((String) map.get("cnpj"));
-		site.setNome((String) map.get("nome"));
-		site.setTelefone((String) map.get("cidade"));
-		
-		site.setUsername((String) map.get("username"));
-		site.setPassword(encoder.encode((String)map.get("password")));
-		site.setRole((String) map.get("role"));
-	}
-
 	private void parse(Promo promo, JSONObject json) {
 
-		Object id = json.get("id");
-		if (id != null) {
-			if (id instanceof Integer) {
-				promo.setId(((Integer) id).longValue());
-			} else {
-				promo.setId(((Long) id));
-			}
+		if(promo.getId() == null){
+			Object id = json.get("id");
+			if (id != null) {
+				if (id instanceof Integer) {
+					promo.setId(((Integer) id).longValue());
+				} else {
+					promo.setId(((Long) id));
+				}
+			}else
+				promo.setId(promoService.ultimoID() + 1);
 		}
 
 		promo.setNomePeca((String) json.get("nomePeca"));
@@ -107,12 +65,30 @@ public class PromoRestController {
 		Double value = (Double) json.get("preco");
 		promo.setPreco(BigDecimal.valueOf(value));
         
-        Teatro teatro = new Teatro();
-		parse(teatro, json);
+		Teatro teatro = new Teatro();
+		Object teatroid = json.get("teatroid");
+
+		if (teatroid != null) {
+			if (teatroid instanceof Integer) {
+				teatro = teatroService.buscarPorId(((Integer) teatroid).longValue());
+			} else {
+				teatro = teatroService.buscarPorId(((Long) teatroid));
+			}
+		}
+		System.out.println(teatro.getNome());
 		promo.setTeatro(teatro);
 
 		Site site = new Site();
-		parse(site, json);
+		Object siteid = json.get("siteid");
+		
+		if (siteid != null) {
+			if (siteid instanceof Integer) {
+				site = siteService.buscarPorId(((Integer) siteid).longValue());
+			} else {
+				site = siteService.buscarPorId(((Long) siteid));
+			}
+		}
+		System.out.println(site.getNome());
 		promo.setSite(site);
 	}
 
@@ -127,11 +103,11 @@ public class PromoRestController {
 
 	@GetMapping(path = "/promocoes/{id}")
 	public ResponseEntity<Promo> lista(@PathVariable("id") long id) {
-		Promo livro = promoService.buscarPorId(id);
-		if (livro == null) {
+		Promo promo = promoService.buscarPorId(id);
+		if (promo == null) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(livro);
+		return ResponseEntity.ok(promo);
 	}
 	
 	@PostMapping(path = "/promocoes")
@@ -139,10 +115,10 @@ public class PromoRestController {
 	public ResponseEntity<Promo> cria(@RequestBody JSONObject json) {
 		try {
 			if (isJSONValid(json.toString())) {
-				Promo livro = new Promo();
-				parse(livro, json);
-				promoService.salvar(livro);
-				return ResponseEntity.ok(livro);
+				Promo promo = new Promo();
+				parse(promo, json);
+				promoService.salvar(promo);
+				return ResponseEntity.ok(promo);
 			} else {
 				return ResponseEntity.badRequest().body(null);
 			}
