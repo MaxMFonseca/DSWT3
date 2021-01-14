@@ -8,7 +8,13 @@ Integrantes:
 ## Roteiro
 O SGBD utilizado foi o MySql. O nome do banco de dados é 'SiteTeatroPromo'.
 
-## Checklist
+## Checklist T3
+- Tudo esta implementado 100%. Max (50%) Matheus (50%).
+- Para executar basta utilizar o comando "mvn spring-boot:run" no terminal da raiz.  
+
+- Eu fiz tudo antes de ler completamente o doc de requisitos :|, por isso existe CRUD completo para promoções. Caso isso seja um problema basta comentar tudo o que diz respeito ao CUD, mantendo apenas o R. Eu mantive porque ja estava pronto, espero que isso nao seja um problema.
+
+## Checklist T2
 - R1: CRUD 1 de sites de venda de ingressos (requer login de administrador)  
   (X) Implementado ( ) Parcialmente implementado ( ) Não implementado  
   Divisão na implementação da funcionalidade: Matheus (100%)
