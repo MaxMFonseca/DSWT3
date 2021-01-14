@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section class="layout-content" layout:fragment="corpo">
+
+		<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><i class="oi oi-caret-right"></i>
+						<span th:text="#{teatro.cadastrar.label}"></span></li>
+				</ul>
+				<a class="btn btn-primary btn-md" th:href="@{/teatros/listar}"
+					role="button"> <span class="oi oi-spreadsheet" title="Listar"
+					aria-hidden="true"></span> <span th:text="#{teatro.listar.label}"></span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="container" id="cadastro">
+
+			<div th:replace="fragments/alert"></div>
+
+			<form
+				th:action="${teatro.id == null} ? @{/teatros/salvar} : @{/teatros/editar}"
+				th:object="${teatro}" method="POST">
+
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label th:text="#{teatro.nome.label}" for="nome"></label> 
+						<input type="text" class="form-control" id="nome" autofocus="autofocus"
+							th:field="*{nome}" th:placeholder="#{teatro.nome.label}"
+							th:classappend="${#fields.hasErrors('nome')} ? is-invalid" />
+
+						<div class="invalid-feedback">
+							<span th:errors="*{nome}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{teatro.cidade.label}" for="cidade"></label> 
+						<input type="text" class="form-control" id="cidade" autofocus="autofocus"
+							th:field="*{cidade}" th:placeholder="#{teatro.cidade.label}"
+							th:classappend="${#fields.hasErrors('cidade')} ? is-invalid" />
+
+						<div class="invalid-feedback">
+							<span th:errors="*{cidade}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{teatro.cnpj.label}" for="CNPJ"></label> 
+						<input type="text" class="form-control" id="CNPJ" autofocus="autofocus"
+							th:field="*{CNPJ}" placeholder="__.___.___/____-__"
+							data-mask="00.000.000/0000-00" data-mask-reverse="true"
+							th:classappend="${#fields.hasErrors('CNPJ')} ? is-invalid" />
+							
+						<div class="invalid-feedback">
+							<span th:errors="*{CNPJ}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{teatro.username.label}" for="username"></label> 
+						<input type="email" class="form-control" id="username"
+							th:placeholder="#{teatro.username.label}"
+							autofocus="autofocus" th:field="*{username}"
+							th:classappend="${#fields.hasErrors('username')} ? is-invalid" />
+
+						<div class="invalid-feedback">
+							<span th:errors="*{username}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{teatro.password.label}" for="password"></label> 
+						<input type="text" class="form-control" id="password"
+							th:placeholder="#{teatro.password.label}" autofocus="autofocus"
+							th:field="*{password}"
+							th:classappend="${#fields.hasErrors('password')} ? is-invalid" th:readonly="${teatro.id != null}"/>
+							
+						<div class="invalid-feedback">
+							<span th:errors="*{password}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{teatro.role.label}" for="role"></label> 
+						<select id="role" class="form-control" th:field="*{role}" readonly
+							th:classappend="${#fields.hasErrors('role')} ? is-invalid">
+							<option value="ROLE_TTR" selected>ROLE_TTR</option>
+						</select>
+
+						<div class="invalid-feedback">
+							<span th:errors="*{role}"></span>
+						</div>
+					</div>
+				</div>
+
+				<input type="hidden" id="id" th:field="*{id}" />
+				<button type="submit" th:text="#{button.salvar.label}"
+					class="btn btn-primary btn-sm"></button>
+			</form>
+		</div>
+	</section>
+</body>
+</html>

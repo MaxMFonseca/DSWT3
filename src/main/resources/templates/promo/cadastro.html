@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section class="layout-content" layout:fragment="corpo">
+
+		<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><i class="oi oi-caret-right"></i>
+						<span th:text="#{promo.cadastrar.label}"></span></li>
+				</ul>
+				<a class="btn btn-primary btn-md" th:href="@{/promos/listar}"
+					role="button"> <span class="oi oi-spreadsheet" title="Listar"
+					aria-hidden="true"></span> <span th:text="#{promo.listar.label}"></span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="container" id="cadastro">
+
+			<div th:replace="fragments/alert"></div>
+
+			<form
+				th:action="@{/promos/salvar}"
+				th:object="${promo}" method="POST">
+
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label th:text="#{promo.nomePeca.label}" for="nomePeca"></label> 
+						<input type="text" class="form-control" id="nomePeca" autofocus="autofocus"
+							th:field="*{nomePeca}" th:placeholder="#{promo.nomePeca.label}"
+							th:classappend="${#fields.hasErrors('nomePeca')} ? is-invalid" />
+
+						<div class="invalid-feedback">
+							<span th:errors="*{nomePeca}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{promo.preco.label}" for="preco"></label> 
+						<input type="number" class="form-control" id="preco" autofocus="autofocus"
+							th:field="*{preco}" placeholder="0.00" step='0.01' value='0.00'
+							th:classappend="${#fields.hasErrors('preco')} ? is-invalid" />
+							
+						<div class="invalid-feedback">
+							<span th:errors="*{preco}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{promo.time.label}" for="time"></label> 
+						<input type="datetime-local" class="form-control" id="time" autofocus="autofocus"
+							th:field="*{time}"
+							th:classappend="${#fields.hasErrors('time')} ? is-invalid" />
+							
+						<div class="invalid-feedback">
+							<span th:errors="*{time}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{promo.site.label}" for="site"></label> 
+						<select id="site" class="form-control" th:field="*{site}"
+							th:classappend="${#fields.hasErrors('site')} ? is-invalid">
+							<option value="">Selecione</option>
+							<option th:each="site : ${sites}" th:value="${site.id}"
+								th:text="${site.nome}"></option>
+						</select>
+
+						<div class="invalid-feedback">
+							<span th:errors="*{site}"></span>
+						</div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label th:text="#{promo.teatro.label}" for="teatro"></label> 
+						<select id="teatro" class="form-control" th:field="*{teatro}" readonly
+							th:classappend="${#fields.hasErrors('teatro')} ? is-invalid">
+							<option th:value="${usuario.id}" th:text="${usuario.nome}" selected></option>
+						</select>
+
+						<div class="invalid-feedback">
+							<span th:errors="*{teatro}"></span>
+						</div>
+					</div>
+				</div>
+
+				<input type="hidden" id="id" th:field="*{id}" />
+				<button type="submit" th:text="#{button.salvar.label}"
+					class="btn btn-primary btn-sm"></button>
+			</form>
+		</div>
+	</section>
+</body>
+</html>

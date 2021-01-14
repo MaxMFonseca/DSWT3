@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<nav class="sidebar sidebar-open" th:fragment="nav-sidebar">
+		<ul class="nav nav-pills">
+			<li class="nav-item"><a class="nav-link " th:href="@{/}"> <i
+					class="oi oi-home"></i> <span th:text="#{sidebar.link.home}"></span>
+			</a></li>
+		</ul>
+
+		<div>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/teatros/listar}"> <i class="oi oi-spreadsheet"></i>
+					<span th:text="#{sidebar.link.listarTeatros}"></span>
+			</a></li>
+		</div>
+
+		<div sec:authorize="hasAnyRole('ROLE_TTR')">
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/promos/listarIndvTeatro}"> <i class="oi oi-spreadsheet"></i>
+					<span th:text="#{sidebar.link.listarPromosPorTeatro}"></span>
+			</a></li>
+		</div>
+		
+		<div sec:authorize="hasAnyRole('ROLE_SITE')">
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/promos/listarIndvSite}"> <i class="oi oi-spreadsheet"></i>
+					<span th:text="#{sidebar.link.listarPromosPorSite}"></span>
+			</a></li>
+		</div>
+
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN')"> 
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/sites/listar}"> <i class="oi oi-spreadsheet"></i>
+					<span th:text="#{sidebar.link.listarSites}"></span>
+			</a></li>
+		</div>
+
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/promos/listar}"> <i class="oi oi-spreadsheet"></i>
+					<span th:text="#{sidebar.link.listarPromos}"></span>
+			</a></li>
+		</div>
+
+		<div sec:authorize="hasRole('ROLE_ADMIN')">
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/usuarios/listar}"> <i class="oi oi-spreadsheet"></i>
+					<span th:text="#{sidebar.link.listarUsuarios}"></span>
+			</a></li>
+		</div>
+	</nav>
+</body>
+</html>

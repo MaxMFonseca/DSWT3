@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section class="layout-content" layout:fragment="corpo">
+
+		<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault" sec:authorize="hasRole('ROLE_TTR')">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="oi oi-caret-right"></i>
+						<span th:text="#{promo.listar.label}"></span>
+					</li>
+				</ul>
+				<a class="btn btn-primary btn-md" th:href="@{/promos/cadastrar}" role="button"> 
+					<span class="oi oi-plus" title="Cadastro" aria-hidden="true"></span> 
+					<span th:text="#{promo.cadastrar.label}"></span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="container" id="listagem">
+
+			<div th:replace="fragments/alert"></div>
+
+			<div class="table-responsive">
+				<table class="table table-striped table-hover table-sm">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th th:text="#{promo.nomePeca.label}"></th>
+							<th th:text="#{promo.teatro.label}"></th>
+							<th th:text="#{promo.preco.label}"></th>
+							<th th:text="#{promo.time.label}"></th>
+							<th th:text="#{promo.site.label}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="promo : ${promos}">
+							<td th:text="${promo.id}"></td>
+							<td th:text="${promo.nomePeca}"></td>
+							<td th:text="${promo.teatro.nome}"></td>
+							<td th:text="${promo.preco}"></td>
+							<td th:text="${promo.time}"></td>
+							<td th:text="${promo.site.nome}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div th:replace="fragments/modal :: modal"></div>
+	</section>
+</body>
+</html>

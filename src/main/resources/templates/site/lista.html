@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section class="layout-content" layout:fragment="corpo">
+
+		<div class="container" id="listagem">
+
+			<div th:replace="fragments/alert"></div>
+
+			<div class="table-responsive">
+				<table class="table table-striped table-hover table-sm">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th th:text="#{site.url.label}"></th>
+							<th th:text="#{site.nome.label}"></th>
+							<th th:text="#{site.email.label}"></th>
+							<th th:text="#{site.telefone.label}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="site : ${sites}">
+							<td th:text="${site.id}"></td>
+							<td th:text="${site.nome}"></td>
+							<td th:text="${site.url}"></td>
+							<th th:text="${site.username}"></th>
+							<td th:text="${site.telefone}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div th:replace="fragments/modal :: modal"></div>
+	</section>
+</body>
+</html>
